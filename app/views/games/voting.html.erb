@@ -1,0 +1,9 @@
+<h1>Voting Page</h1>
+
+<%= form_for :vote, url: '/games/collect_votes', method: 'post' do |f| %>
+    <%= f.submit "Accept"%>
+<% end %>
+
+<%= form_for :vote, url: '/games/collect_votes', method: 'post' do |f| %>
+    <%= f.submit "Decline"%>
+<% end %>

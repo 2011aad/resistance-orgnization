@@ -1,0 +1,23 @@
+<h1>Game List</h1>
+
+<% if flash[:notice] %>
+    <p><%= flash[:notice] %></p>
+<% end %>
+
+<table>
+    <tr>
+        <th>Game</th>
+        <th>Players</th>
+        <th colspan="1"></th>
+    </tr>
+
+    <% @games.each do |game| %>
+        <tr>
+            <td><%= game.game_name %></td>
+            <td><%= game.player_num %></td>
+            <td><%= link_to 'Join', games_password_path({:id => game.id}) %></td>
+        </tr>
+    <% end %>
+</table>
+
+<%= link_to 'Back', games_index_path %>

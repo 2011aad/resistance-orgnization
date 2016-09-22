@@ -1,0 +1,19 @@
+<h1><%= "Your role is #{@myself.role}" %></h1>
+
+<% if @myself.role == 'spy' %>
+    <p>Your teammates are</p>
+    <% @teammates.each do |seat|%>
+        <span><%= "#{seat}" %></span>
+    <% end %>
+<% end %>
+
+<% if @myself.id == @game.sheriff_player_id %>
+    <p>You are sheriff</p>
+    <%= link_to 'Start Speaking', '/games/choose_team_member' %>
+<% end %>
+
+<p>Game Process</p>
+
+<% @game_process.each do |x| %>
+    <span><%= "#{x}"%></span>
+<% end %>

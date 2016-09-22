@@ -1,0 +1,12 @@
+<h1>Create a new game</h1>
+
+<%= form_for :game, url: '/games/start_game' do |f| %>
+    <%= f.label :game_name, 'Game Name:' %>
+    <%= f.text_field :game_name %>
+    <%= f.select :player_num, [2,3,4,5,6,7,8,9,10], :prompt => "Select number of players:" %>
+    <%= f.label :password, 'Password:' %>
+    <%= f.password_field :password %>
+    <%= f.submit 'Create' %>
+<% end %>
+
+<%= link_to 'Back', games_index_path %>

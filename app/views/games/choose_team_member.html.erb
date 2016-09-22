@@ -1,0 +1,10 @@
+<h1>Choose your team member</h1>
+
+<%= form_for :team, url: '/games/team_info', method: 'post' do |f| %>
+    <% (1..@game.player_num).each do |x| %>
+        <%= f.label :seat, "#{x}" %>
+        <%= f.check_box x %>
+    <% end %>
+    <%= f.label :name, "You should choose #{@team_size} players" %>
+    <%= f.submit "Start Voting"%>
+<% end %>
