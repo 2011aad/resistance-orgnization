@@ -49,6 +49,7 @@ class GamesController < ApplicationController
       redirect_to '/games/join_game'
     end
     @game = Game.find(session[:game_id])
+    @selected = Game.selected_seats(@game.id)
     
     if Game.full(@game.id)
       @game.game_status = 'play'
@@ -68,9 +69,9 @@ class GamesController < ApplicationController
         @player = Player.find(player)
         seats.push(@player.seat_num)
     end
-    if not seats.include?(params[:seat_number])
+    if not seats.include?(params[:commit].to_i)
       @player = Player.find(session[:player_id])
-      @player.seat_num = params[:seat_number]
+      @player.seat_num = params[:commit].to_i
       @player.save
     end
     redirect_to '/games/waiting_to_start'
@@ -115,6 +116,8 @@ class GamesController < ApplicationController
   def choose_team_member
     @game = Game.find(session[:game_id])
     @team_size = Game.team_size(@game.id)
+    Player.clear_votes(session[:game_id])
+    Player.clear_team(session[:game_id])
   end
   
   def team_info
@@ -128,11 +131,24 @@ class GamesController < ApplicationController
   
   def voting
     @game = Game.find(session[:game_id])
-    if @game.game_status == 'play'
-      redirect_to '/games/play'
-    elsif @game.game_status == 'tasking'
-      redirect_to '/games/tasking'
+    if @game.game_status != 'voting'
+      redirect_to '/games/show_vote_result'
     else
+    end
+  end
+  
+  def show_vote_result
+    @game = Game.find(session[:game_id])
+    @result = Player.show_vote_result(@game.id)
+    @pass_or_not = Player.vote_result(@game.id)
+    if @pass_or_not
+      @game.game_status = 'tasking'
+      @game.save
+      @next = '/games/tasking'
+    else
+      @game.game_status = 'play'
+      @game.save
+      @next = '/games/play'
     end
   end
   
@@ -147,18 +163,8 @@ class GamesController < ApplicationController
     end
     @game = Game.find(session[:game_id])
     if Player.all_voted(session[:game_id])
-      if Player.vote_result(session[:game_id])
-        @game.game_status = 'tasking'
-        @game.save
-        redirect_to '/games/tasking'
-      else
-        @game.game_status = 'play'
-        @game.save
-        Player.clear_team(session[:game_id])
-        redirect_to '/games/play'
-      end
-      Player.clear_votes(session[:game_id])
       Game.move_sheriff(session[:game_id])
+      redirect_to '/games/show_vote_result'
     else
       redirect_to '/games/voting'
     end
@@ -168,6 +174,7 @@ class GamesController < ApplicationController
     @player = Player.find(session[:player_id])
     if @player.in_team == 0
       redirect_to '/games/waiting'
+      return
     end
     
     @game = Game.find(session[:game_id])
@@ -185,14 +192,8 @@ class GamesController < ApplicationController
   
   def waiting
     @game = Game.find(session[:game_id])
-    if @game.game_status == 'play'
-      redirect_to '/games/play'
-    elsif @game.game_status == 'finish'
-      if Game.who_wins(@game.id) == 'spy'
-          redirect_to '/games/spy_win'
-      elsif Game.who_wins(@game.id) == 'resistant'
-          redirect_to '/games/resistant_win'
-      end
+    if @game.game_status != 'tasking'
+      redirect_to '/games/show_task_result'
     else
     end
   end
@@ -209,25 +210,37 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     if Player.all_done(@game.id)
       Game.update_game_process(@game.id)
-      if Game.is_finish(@game.id)
-        @game.game_status = 'finish'
-        @game.save
-        if Game.who_wins(@game.id) == 'spy'
-          redirect_to '/games/spy_win'
-        elsif Game.who_wins(@game.id) == 'resistant'
-          redirect_to '/games/resistant_win'
-        end
-      else
-        @game.game_status = 'play'
-        @game.save
-        redirect_to '/games/play'
-      end
-      Player.clear_votes(session[:game_id])
-      Player.clear_team(session[:game_id])
+      redirect_to '/games/show_task_result'
     else
       redirect_to '/games/tasking'
       return
     end
+  end
+  
+  def show_task_result
+    @result = Player.show_task_result(session[:game_id])
+    @game = Game.find(session[:game_id])
+    pro = @game.game_process.split(',')
+    pro.each do |p|
+      if p == 'undefined'
+        break
+      end
+      @success_or_not = p
+    end
+    if Game.is_finish(@game.id)
+      @game.game_status = 'finish'
+      @game.save
+      if Game.who_wins(@game.id) == 'spy'
+        @next = '/games/spy_win'
+      elsif Game.who_wins(@game.id) == 'resistant'
+        @next = '/games/resistant_win'
+      end
+    else
+      @game.game_status = 'play'
+      @game.save
+      @next = '/games/play'
+    end
+
   end
   
   def resistant_win

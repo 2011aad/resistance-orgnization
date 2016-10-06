@@ -1,20 +1,14 @@
 <h1><%= "Game " + @game.game_name %></h1>
-<script type="text/javascript">
-    var server = 'https://resistance-orgnization-a2011aad.c9users.io';
-    var dispatcher = new WebSocketRails(server + '/websocket');
-    var channel = dispatcher.subscribe('channel');
-    
-    channel.bind('refresh', function(data) {
-        location.reload(true)   
-        // console.log('connection is closed');
-    });
-    document.write("<p>My First JavaScript</p>");
-</script>
-
-<% (1..@game.player_num).each do |i| %>
-    <%= form_for :seat, url: games_choose_seat_path({:seat_number => i}), method: "post" do |f| %>
-        <%= f.submit "#{i}" %>
+<div class="center jumbotron">
+    <%= form_for :seat, url: games_choose_seat_path, method: "post" do |f| %>
+        <% (1..@game.player_num).each do |i| %>
+            <% if @selected.include?i %>
+                <%= f.submit "#{i}", class: "btn btn-lg btn-primary", disabled: "disabled" %>
+            <% else %>
+                <%= f.submit "#{i}", class: "btn btn-lg btn-primary" %>
+            <% end %>
+        <% end %>
     <% end %>
-<% end %>
+</div>
 
 

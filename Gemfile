@@ -15,6 +15,10 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'therubyracer', platforms: :ruby
 
 gem 'websocket-rails'
+gem 'twitter-bootstrap-rails'
+gem 'therubyracer'
+gem 'execjs'
+gem 'bootstrap-sass', '3.3.6'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

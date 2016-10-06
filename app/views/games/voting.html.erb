@@ -1,9 +1,7 @@
-<h1>Voting Page</h1>
-
-<%= form_for :vote, url: '/games/collect_votes', method: 'post' do |f| %>
-    <%= f.submit "Accept"%>
-<% end %>
-
-<%= form_for :vote, url: '/games/collect_votes', method: 'post' do |f| %>
-    <%= f.submit "Decline"%>
-<% end %>
+<h1>Vote</h1>
+<div class="center jumbotron">
+    <%= form_for :vote, url: '/games/collect_votes', method: 'post' do |f| %>
+        <%= f.submit "Accept", class: 'btn btn-lg btn-primary' %>
+        <%= f.submit "Reject", class: 'btn btn-lg btn-primary' %>
+    <% end %>
+</div>

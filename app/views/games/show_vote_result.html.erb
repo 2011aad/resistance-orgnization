@@ -1,0 +1,24 @@
+<h1>Vote Result</h1>
+<div class="jumbotron">
+    <% if @pass_or_not %>
+        <p>Vote Pass</p>
+    <% else %>
+        <p>Vote Rejected</p>
+    <% end %>
+    
+    <table class="table table-striped">
+        <tr>
+            <th>Accept</th>
+            <th>Reject</th>
+        </tr>
+    
+        <tr>
+            <td><%= @result[:pass] %></td>
+            <td><%= @result[:not_pass] %></td>
+        </tr>
+    </table>
+</div>
+
+<div class="center">
+    <%= link_to 'OK', @next, class: 'btn btn-lg btn-primary' %>
+</div>

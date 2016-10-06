@@ -1,10 +1,22 @@
-<h1>Choose your team member</h1>
+<h1>Choose team member</h1>
 
-<%= form_for :team, url: '/games/team_info', method: 'post' do |f| %>
-    <% (1..@game.player_num).each do |x| %>
-        <%= f.label :seat, "#{x}" %>
-        <%= f.check_box x %>
+<div class="text-muted">
+    <% if @team_size == 1%>
+        You should choose <%= "#{@team_size}" %> player
+    <% else %>
+        You should choose <%= "#{@team_size}" %> players
     <% end %>
-    <%= f.label :name, "You should choose #{@team_size} players" %>
-    <%= f.submit "Start Voting"%>
+</div>
+
+
+<%= form_for :team, class: "form-horizontal" ,url: '/games/team_info', method: 'post' do |f| %>
+    <div class="center jumbotron">
+        <% (1..@game.player_num).each do |x| %>
+            <%= f.label :seat, "#{x}", class: "control-label" %>
+            <%= f.check_box x %>
+        <% end %>
+    </div>
+    <div class="center">
+        <%= f.submit "Start Voting", class: "btn btn-primary"%>
+    </div>
 <% end %>

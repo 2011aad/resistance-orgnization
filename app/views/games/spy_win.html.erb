@@ -1,4 +1,11 @@
-<h1>Spy wins</h1>
+<h1>
+    <div class="text-danger">
+        Spy wins
+    </div>
+</h1>
+
 <%= form_for :restart, url: '/games/restart', method: 'post' do |f| %>
-    <%= f.submit "Restart Game"%>
+    <div class="center">
+        <%= f.submit "Restart Game", class: "btn btn-lg btn-primary"%>
+    </div>
 <% end %>

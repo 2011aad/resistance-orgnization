@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   get 'games/resistant_win' => 'games#resistant_win'
   post '/games/collect_tasks' => 'games#collect_tasks'
   post '/games/restart' => 'games#restart'
+  get '/games/show_task_result' => 'games#show_task_result'
+  get '/games/show_vote_result' => 'games#show_vote_result'
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 

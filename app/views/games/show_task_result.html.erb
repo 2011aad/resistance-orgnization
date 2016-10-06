@@ -1,0 +1,25 @@
+<h1>Task Result</h1>
+
+<div class="jumbotron">
+    <% if @success_or_not == 'success' %>
+        <p>Task Success</p>
+    <% else %>
+        <p>Task Fail</p>
+    <% end %>
+    
+    <table class="table table-striped">
+        <tr>
+            <th>Success</th>
+            <th>Fail</th>
+        </tr>
+    
+        <tr>
+            <td><%= @result[:pass] %></td>
+            <td><%= @result[:not_pass] %></td>
+        </tr>
+    </table>
+</div>
+
+<div class="center">
+    <%= link_to 'OK', @next, class: 'btn btn-lg btn-primary' %>
+</div>

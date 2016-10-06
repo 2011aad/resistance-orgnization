@@ -112,4 +112,15 @@ class Game < ActiveRecord::Base
         end
         @game.save
     end
+    
+    def self.selected_seats(gid)
+        seats = []
+        @player_ids = Player.where(game_id: gid).ids
+        @player_ids.each do |id|
+            @player = Player.find(id)
+            seats << @player.seat_num
+        end
+        
+        return seats
+    end
 end

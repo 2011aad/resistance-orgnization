@@ -4,6 +4,7 @@ class Player < ActiveRecord::Base
         self.role ||= nil
         self.in_team ||= 0
         self.vote ||= nil
+        self.seat_num ||= 0
     end
     
     def self.set_team(gid, team)
@@ -25,6 +26,26 @@ class Player < ActiveRecord::Base
     def self.vote_result(gid)
         @game = Game.find(gid)
         return Player.where(game_id: gid, vote: 'pass').count > (@game.player_num / 2)
+    end
+    
+    def self.show_vote_result(gid)
+        @player_ids = Player.where(game_id: gid).ids
+        result = {:pass => 0, :not_pass => 0}
+        @player_ids.each do |id|
+            @player = Player.find(id)
+            result[@player.vote.to_sym] += 1
+        end
+        return result
+    end
+    
+    def self.show_task_result(gid)
+        @player_ids = Player.where(game_id: gid, in_team: 1).ids
+        result = {:pass => 0, :not_pass => 0}
+        @player_ids.each do |id|
+            @player = Player.find(id)
+            result[@player.vote.to_sym] += 1
+        end
+        return result
     end
     
     def self.clear_votes(gid)

@@ -1,19 +1,68 @@
-<h1><%= "Your role is #{@myself.role}" %></h1>
-
-<% if @myself.role == 'spy' %>
-    <p>Your teammates are</p>
-    <% @teammates.each do |seat|%>
-        <span><%= "#{seat}" %></span>
+<h1>
+    <% if @myself.role == 'resistant' %>
+        <div class="text-primary">
+            <%= "#{@myself.role.upcase}" %>
+        </div>
+    <% else %>
+        <div class="text-danger">
+            <%= "#{@myself.role.upcase}" %>
+        </div>
     <% end %>
-<% end %>
+</h1>
 
 <% if @myself.id == @game.sheriff_player_id %>
-    <p>You are sheriff</p>
-    <%= link_to 'Start Speaking', '/games/choose_team_member' %>
+    <div class="text-info center">
+        <p>You are Sheriff</p>
+    </div>
 <% end %>
 
-<p>Game Process</p>
+<div class="text-muted">
+    <% if @myself.role == 'spy' %>
+        <p>Teammates: </p>
+        <% @teammates.each do |seat|%>
+            <span><%= " #{seat}" %></span>
+        <% end %>
+    <% end %>
+</div>
 
-<% @game_process.each do |x| %>
-    <span><%= "#{x}"%></span>
-<% end %>
+<div class="center jumbotron">
+    <div class="text-left">
+        <p>Game Process</p>
+    </div>
+    
+    <table class="table table-striped text-left">
+        <tr>
+            <th>Task 1</th>
+            <th>Task 2</th>
+            <th>Task 3</th>
+            <th>Task 4</th>
+            <th>Task 5</th>
+        </tr>
+    
+        <tr>
+            <% @game_process.each do |x| %>
+                <% if x == 'success' %>
+                    <td>
+                        <div class="text-success">
+                            <%= "#{x.upcase}"%>
+                        </div>
+                    </td>
+                <% elsif x == 'fail' %>
+                    <td>
+                        <div class="text-danger">
+                            <%= "#{x.upcase}"%>
+                        </div>
+                    </td>
+                <% else %>
+                    <td></td>
+                <% end %>
+            <% end %>
+        </tr>
+    </table>
+</div>
+
+<div class="center">
+    <% if @myself.id == @game.sheriff_player_id %>
+        <%= link_to 'Start Speaking', '/games/choose_team_member', class: 'btn btn-lg btn-primary' %>
+    <% end %>
+</div>
