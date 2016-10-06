@@ -1,3 +1,15 @@
+
+<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+<script>
+var pusher = new Pusher('9624582dd73c35f24351', {
+  encrypted: true
+});
+
+var channel = pusher.subscribe('<%= "channel_#{@game.id}" %>');
+channel.bind('refresh', function(data) {
+  location.reload();
+});
+</script>
 <h1>
     <% if @myself.role == 'resistant' %>
         <div class="text-primary">
@@ -63,6 +75,6 @@
 
 <div class="center">
     <% if @myself.id == @game.sheriff_player_id %>
-        <%= link_to 'Start Speaking', '/games/choose_team_member', class: 'btn btn-lg btn-primary' %>
+        <%= button_to 'Start Speaking', '/games/choose_team_member', method: :get, class: 'btn btn-lg btn-primary' %>
     <% end %>
 </div>

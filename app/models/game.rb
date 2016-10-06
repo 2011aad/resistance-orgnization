@@ -10,7 +10,7 @@ class Game < ActiveRecord::Base
     after_initialize :default_values
     def default_values
         self.game_process ||= 'undefined,undefined,undefined,undefined,undefined'
-        self.game_status ||= 'play'
+        self.game_status ||= 'waiting'
     end
     
     def self.full(gid)
@@ -79,6 +79,7 @@ class Game < ActiveRecord::Base
             pro[index] = 'success'
         end
         @game.game_process = pro.join(',')
+        @game.game_status = 'task_finish'
         @game.save
     end
     
@@ -103,7 +104,7 @@ class Game < ActiveRecord::Base
     def self.restart(gid)
         @game = Game.find(gid)
         @game.game_process = 'undefined,undefined,undefined,undefined,undefined'
-        @game.game_status = 'play'
+        @game.game_status = 'waiting'
         @player_ids = Player.where(game_id: gid).ids
         @player_ids.each do |id|
             @player = Player.find(id)

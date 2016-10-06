@@ -1,1 +1,14 @@
-<h1>Wating...</h1>
+
+<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+<script>
+  var pusher = new Pusher('9624582dd73c35f24351', {
+    encrypted: true
+  });
+
+  var channel = pusher.subscribe('<%= "channel_#{@game.id}" %>');
+  channel.bind('refresh', function(data) {
+    location.reload();
+  });
+</script>
+
+<h1>Waiting...</h1>

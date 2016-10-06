@@ -1,14 +1,27 @@
-<h1><%= "Game " + @game.game_name %></h1>
-<div class="center jumbotron">
-    <%= form_for :seat, url: games_choose_seat_path, method: "post" do |f| %>
-        <% (1..@game.player_num).each do |i| %>
-            <% if @selected.include?i %>
-                <%= f.submit "#{i}", class: "btn btn-lg btn-primary", disabled: "disabled" %>
-            <% else %>
-                <%= f.submit "#{i}", class: "btn btn-lg btn-primary" %>
+<head>
+  <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+  <script>
+    var pusher = new Pusher('9624582dd73c35f24351', {
+      encrypted: true
+    });
+
+    var channel = pusher.subscribe('<%= "channel_#{@game.id}" %>');
+    channel.bind('refresh', function(data) {
+      location.reload();
+    });
+  </script>
+</head>
+<body>
+    <h1><%= "Game " + @game.game_name %></h1>
+    <div class="center jumbotron">
+        <%= form_for :seat, url: games_choose_seat_path, method: "post" do |f| %>
+            <% (1..@game.player_num).each do |i| %>
+                <% if @selected.include?i %>
+                    <%= f.submit "#{i}", class: "btn btn-lg btn-primary", disabled: "disabled" %>
+                <% else %>
+                    <%= f.submit "#{i}", class: "btn btn-lg btn-primary" %>
+                <% end %>
             <% end %>
         <% end %>
-    <% end %>
-</div>
-
-
+    </div>
+</body>

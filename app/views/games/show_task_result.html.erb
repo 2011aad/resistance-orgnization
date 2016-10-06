@@ -1,3 +1,15 @@
+
+<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+<script>
+    var pusher = new Pusher('9624582dd73c35f24351', {
+      encrypted: true
+    });
+    
+    var channel = pusher.subscribe('<%= "channel_#{@game.id}" %>');
+    channel.bind('refresh', function(data) {
+      location.reload();
+    });
+</script>
 <h1>Task Result</h1>
 
 <div class="jumbotron">
@@ -21,5 +33,5 @@
 </div>
 
 <div class="center">
-    <%= link_to 'OK', @next, class: 'btn btn-lg btn-primary' %>
+    <%= button_to 'OK', @next, method: :get, class: 'btn btn-lg btn-primary' %>
 </div>

@@ -51,9 +51,7 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     @selected = Game.selected_seats(@game.id)
     
-    if Game.full(@game.id)
-      @game.game_status = 'play'
-      # WebsocketRails[:channel].trigger(:refresh, nil)
+    if @game.game_status == 'play'
       redirect_to '/games/play'
     end
   end
@@ -74,11 +72,24 @@ class GamesController < ApplicationController
       @player.seat_num = params[:commit].to_i
       @player.save
     end
-    redirect_to '/games/waiting_to_start'
+    
+    @game = Game.find(session[:game_id])
+    if Game.full(@game.id)
+      @game.game_status = 'play'
+      @game.save
+      Pusher.trigger("channel_" + (@game.id).to_s, 'refresh', {})
+      redirect_to '/games/play'
+    else
+      redirect_to '/games/waiting_to_start'
+    end
   end
   
   def play
     @game = Game.find(session[:game_id])
+    if @game.game_status == 'voting'
+      redirect_to '/games/voting'
+      return 
+    end
     @player_ids = Player.where(game_id: @game.id).ids
     @myself = Player.find(session[:player_id])
     if @myself.role == nil
@@ -107,10 +118,6 @@ class GamesController < ApplicationController
         @teammates.push(Player.find(id).seat_num)
       end
     end
-    
-    if @game.game_status == 'voting'
-      redirect_to '/games/voting'
-    end
   end
     
   def choose_team_member
@@ -126,6 +133,7 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     @game.game_status = 'voting'
     @game.save
+    Pusher.trigger("channel_" + (@game.id).to_s, 'refresh', {})
     redirect_to '/games/voting'
   end
   
@@ -133,7 +141,6 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     if @game.game_status != 'voting'
       redirect_to '/games/show_vote_result'
-    else
     end
   end
   
@@ -164,6 +171,9 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     if Player.all_voted(session[:game_id])
       Game.move_sheriff(session[:game_id])
+      @game.game_status = "vote_finish"
+      @game.save
+      Pusher.trigger("channel_" + (@game.id).to_s, 'refresh', {})
       redirect_to '/games/show_vote_result'
     else
       redirect_to '/games/voting'
@@ -174,19 +184,11 @@ class GamesController < ApplicationController
     @player = Player.find(session[:player_id])
     if @player.in_team == 0
       redirect_to '/games/waiting'
-      return
-    end
-    
-    @game = Game.find(session[:game_id])
-    if @game.game_status == 'play'
-      redirect_to '/games/play'
-    elsif @game.game_status == 'finish'
-      if Game.who_wins(@game.id) == 'spy'
-          redirect_to '/games/spy_win'
-      else
-          redirect_to '/games/resistant_win'
+    else 
+      @game = Game.find(session[:game_id])
+      if @game.game_status != 'tasking'
+        redirect_to '/games/show_task_result'
       end
-    else
     end
   end
   
@@ -194,7 +196,6 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     if @game.game_status != 'tasking'
       redirect_to '/games/show_task_result'
-    else
     end
   end
   
@@ -210,10 +211,10 @@ class GamesController < ApplicationController
     @game = Game.find(session[:game_id])
     if Player.all_done(@game.id)
       Game.update_game_process(@game.id)
+      Pusher.trigger("channel_" + (@game.id).to_s, 'refresh', {})
       redirect_to '/games/show_task_result'
     else
       redirect_to '/games/tasking'
-      return
     end
   end
   
