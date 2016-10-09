@@ -1,10 +1,5 @@
 <h1>Create a New Game</h1>
 <%= form_for :game, class: "form-horizontal", url: '/games/start_game' do |f| %>
-    <%= f.label :game_name, 'Game Name', class: "control-label" %>
-    <div class="controls">
-        <%= f.text_field :game_name, class: "form-control" %>
-    </div>
-    
     <%= f.label :player_num, 'Player Number', class: "control-label" %>
     <div class="styled-select">
         <%= f.select :player_num, [2,3,4,5,6,7,8,9,10], prompt: "Select player number" %>

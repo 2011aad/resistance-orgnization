@@ -15,3 +15,15 @@
 // = require turbolinks
 // = require_tree .
 // =require websocket_rails/main
+
+function check_form_complete()
+{
+    for(var i=0;i<document.form1.elements.length-1;i++)
+    {
+        if(document.form1.elements[i].value==""){
+           document.form1.elements[i].focus();
+           return false;
+        }
+    }
+    return true;
+}

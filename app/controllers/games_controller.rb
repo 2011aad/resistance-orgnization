@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   
   def game_params
-    params.require(:game).permit(:game_name, :player_num, :password)
+    params.require(:game).permit(:player_num, :password)
   end
   
   def index

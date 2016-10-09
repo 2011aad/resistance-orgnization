@@ -12,7 +12,7 @@
   </script>
 </head>
 <body>
-    <h1><%= "Game " + @game.game_name %></h1>
+    <h1><%= "Game #{@game.id}" %></h1>
     <div class="center jumbotron">
         <%= form_for :seat, url: games_choose_seat_path, method: "post" do |f| %>
             <% (1..@game.player_num).each do |i| %>

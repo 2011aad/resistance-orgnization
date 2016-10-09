@@ -13,7 +13,7 @@
 
     <% @games.each do |game| %>
         <tr>
-            <td><%= game.game_name %></td>
+            <td><%= game.id %></td>
             <td><%= game.player_num %></td>
             <td><%= link_to 'Join', games_password_path({:id => game.id}) %></td>
         </tr>

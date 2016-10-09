@@ -14,7 +14,6 @@
 ActiveRecord::Schema.define(version: 20160919104515) do
 
   create_table "games", force: :cascade do |t|
-    t.string   "game_name"
     t.integer  "player_num"
     t.string   "password"
     t.string   "game_process"
@@ -25,7 +24,6 @@ ActiveRecord::Schema.define(version: 20160919104515) do
   end
 
   create_table "players", force: :cascade do |t|
-    t.string   "name"
     t.string   "role"
     t.integer  "game_id"
     t.integer  "in_team"
