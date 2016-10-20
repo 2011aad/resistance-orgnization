@@ -30,9 +30,9 @@ channel.bind('refresh', function(data) {
 
 <div class="text-muted">
     <% if @myself.role == 'spy' %>
-        <p>Teammates: </p>
+        Teammates:
         <% @teammates.each do |seat|%>
-            <span><%= " #{seat}" %></span>
+            <%= " #{seat}" %>
         <% end %>
     <% end %>
 </div>

@@ -139,6 +139,13 @@ class GamesController < ApplicationController
   
   def voting
     @game = Game.find(session[:game_id])
+    @player = Player.find(session[:player_id])
+    @team = []
+    @player_ids = Player.where(game_id: @game.id, in_team: 1).ids
+    @player_ids.each do |id|
+      @team.push(Player.find(id).seat_num)
+    end
+    #@team.sort!
     if @game.game_status != 'voting'
       redirect_to '/games/show_vote_result'
     end
