@@ -10,32 +10,43 @@ channel.bind('refresh', function(data) {
   location.reload();
 });
 </script>
+
 <h1>
-    <% if @myself.role == 'resistant' %>
-        <div class="text-primary">
-            <%= "#{@myself.role.upcase}" %>
-        </div>
+    <% if session[:show_role_info] == 'Show' %>
+        <% if @myself.role == 'resistant' %>
+            <div class="text-primary">
+                <%= button_to "#{@myself.role.upcase}", games_play_path({:commit => 'Hide'}), method: :post, class: "plain-button" %>
+            </div>
+        <% else %>
+            <div class="text-danger">
+                <%= button_to "#{@myself.role.upcase}", games_play_path({:commit => 'Hide'}), method: :post, class: "plain-button" %>
+            </div>
+        <% end %>
+        
     <% else %>
-        <div class="text-danger">
-            <%= "#{@myself.role.upcase}" %>
+        <div class="text-info">
+            <%= button_to "Player #{@myself.seat_num}", games_play_path({:commit => 'Show'}), method: :post, class: "plain-button" %>
         </div>
+        
     <% end %>
 </h1>
 
-<% if @myself.id == @game.sheriff_player_id %>
-    <div class="text-info center">
-        <p>You are Sheriff</p>
-    </div>
-<% end %>
+<h3>
+    <% if @myself.id == @game.sheriff_player_id %>
+        <div class="text-info center">
+            <p>You are Sheriff</p>
+        </div>
+    <% end %>
+</h3>
 
-<div class="text-muted">
-    <% if @myself.role == 'spy' %>
+<% if session[:show_role_info] == 'Show' and @myself.role == 'spy' %>
+    <div class="text-danger">
         Teammates:
         <% @teammates.each do |seat|%>
             <%= " #{seat}" %>
         <% end %>
-    <% end %>
-</div>
+    </div>
+<% end %>
 
 <div class="center jumbotron">
     <div class="text-left">

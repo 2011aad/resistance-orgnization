@@ -6,6 +6,7 @@ class GamesController < ApplicationController
   
   def index
     session[:game_id] = nil
+    session[:show_role_info] = 'Show'
   end
   
   def create
@@ -85,6 +86,10 @@ class GamesController < ApplicationController
   end
   
   def play
+    if params[:commit]
+      session[:show_role_info] = params[:commit]
+    end
+    
     @game = Game.find(session[:game_id])
     if @game.game_status == 'voting'
       redirect_to '/games/voting'
