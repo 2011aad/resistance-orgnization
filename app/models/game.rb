@@ -62,9 +62,9 @@ class Game < ActiveRecord::Base
     
     def self.move_sheriff(gid)
         @game = Game.find(gid)
-        @sheriff = Player.find(@game.sheriff_player_id)
-        @seat = @sheriff.seat_num % @game.player_num + 1
-        @game.sheriff_player_id = Player.where(game_id: gid, seat_num: @seat).ids[0]
+        @player_ids = Player.where(game_id: gid).ids
+        index = (@player_ids.index(@game.sheriff_player_id) + 1) % (@player_ids.length)
+        @game.sheriff_player_id = @player_ids[index]
         @game.save
     end
     
@@ -73,7 +73,7 @@ class Game < ActiveRecord::Base
         pro = @game.game_process.split(',')
         index = pro.index('undefined')
         min_fail = (@game.player_num>=7 and Game.round_num(gid)==3)? 2:1
-        if Player.where(game_id: gid, vote: 'not_pass', in_team: 1).count >= min_fail
+        if Player.where(game_id: gid, vote: 'not_pass').count >= min_fail
             pro[index] = 'fail'
         else
             pro[index] = 'success'

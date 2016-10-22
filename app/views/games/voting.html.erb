@@ -11,24 +11,9 @@
   });
 </script>
 <h1>Vote</h1>
-
-<h4 class="text-info">
-  Team member:
-  <% @team.each do |seat| %>
-    <%= " #{seat}" %>
-  <% end %>
-</h4>
 <div class="center jumbotron">
     <%= form_for :vote, url: '/games/collect_votes', method: 'post' do |f| %>
-      <% if @player.vote == 'pass' %>
-        <%= f.submit "Accept", class: 'btn btn-lg btn-primary', disabled: "disabled" %>
-      <% else %>
-        <%= f.submit "Accept", class: 'btn btn-lg btn-primary'%>
-      <% end %>
-      <% if @player.vote == 'not_pass' %>
-        <%= f.submit "Reject", class: 'btn btn-lg btn-primary', disabled: "disabled" %>
-      <% else %>
-        <%= f.submit "Reject", class: 'btn btn-lg btn-primary'%>
-      <% end %>
+        <%= f.submit "Accept", class: 'btn btn-lg btn-primary' %>
+        <%= f.submit "Reject", class: 'btn btn-lg btn-primary' %>
     <% end %>
 </div>
