@@ -9,26 +9,35 @@ var channel = pusher.subscribe('<%= "channel_#{@game.id}" %>');
 channel.bind('refresh', function(data) {
   location.reload();
 });
-</script>
 
+var hide_or_show = 'Hide';
+function change_role_info(){
+    $('#teammates_info').attr('class', '');
+    if(hide_or_show == 'Show'){
+       hide_or_show = 'Hide'; 
+       $('#teammates_info').slideUp();
+       $('#role_info').text("<%= "Player #{@myself.seat_num}"%>");
+       $('#role_info_text').attr('class', "text-info");
+    } 
+    else{
+        hide_or_show = 'Show';    
+        $('#teammates_info').slideDown();
+        if("<%= "#{@myself.role.upcase}"%>" == "SPY"){
+            $('#role_info_text').attr('class', "text-danger");
+        }
+        else{
+            $('#role_info_text').attr('class', "text-info");
+        }
+        $('#role_info').text("<%= "#{@myself.role.upcase}"%>");
+    } 
+}
+</script>
 <h1>
-    <% if session[:show_role_info] == 'Show' %>
-        <% if @myself.role == 'resistant' %>
-            <div class="text-primary">
-                <%= button_to "#{@myself.role.upcase}", games_play_path({:commit => 'Hide'}), method: :post, class: "plain-button" %>
-            </div>
-        <% else %>
-            <div class="text-danger">
-                <%= button_to "#{@myself.role.upcase}", games_play_path({:commit => 'Hide'}), method: :post, class: "plain-button" %>
-            </div>
-        <% end %>
-        
-    <% else %>
-        <div class="text-info">
-            <%= button_to "Player #{@myself.seat_num}", games_play_path({:commit => 'Show'}), method: :post, class: "plain-button" %>
-        </div>
-        
-    <% end %>
+    <div id="role_info_text", class="text-info">
+        <button type="button" class="plain-button", id="role_info", onclick="change_role_info()">
+            <%= "Player #{@myself.seat_num}"%>
+        </button>
+    </div>
 </h1>
 
 <h3>
@@ -38,15 +47,16 @@ channel.bind('refresh', function(data) {
         </div>
     <% end %>
 </h3>
-
-<% if session[:show_role_info] == 'Show' and @myself.role == 'spy' %>
-    <div class="text-danger">
-        Teammates:
-        <% @teammates.each do |seat|%>
-            <%= " #{seat}" %>
-        <% end %>
-    </div>
-<% end %>
+<div id="teammates_info" class="hidden">
+    <% if @myself.role == 'spy' %>
+        <div class="text-danger">
+            Teammates:
+            <% @teammates.each do |seat|%>
+                <%= " #{seat}" %>
+            <% end %>
+        </div>
+    <% end %>
+</div>
 
 <div class="center jumbotron">
     <div class="text-left">

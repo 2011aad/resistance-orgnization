@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   get 'games/password' => 'games#password'
   post 'games/choose_seat' => 'games#choose_seat'
   get 'games/play' => 'games#play'
-  post 'games/play' => 'games#play'
   get 'games/waiting_to_start' => 'games#waiting_to_start'
   get 'games/choose_team_member' => 'games#choose_team_member'
   post 'games/team_info' => 'games#team_info'
